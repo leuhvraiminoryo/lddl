@@ -1,4 +1,4 @@
-import PySimpleGUI as sg
+import threading, PySimpleGUI as sg
 from scripts.download import load as dl
 
 sg.theme('DarkAmber')   # Add a touch of color
@@ -16,6 +16,7 @@ def run():
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             break
         if event == 'Ok':
-            dl(values[0])
+            load_thread = threading.Thread(target=dl,args=(values[0],))
+            load_thread.start()
 
     window.close()
