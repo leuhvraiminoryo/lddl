@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
 import youtube_dl
 
+global status 
 status = {
+    'chchch': 0,
     'downloading': False,
     'dl_of_name': None,
     'percentage': None
@@ -17,15 +19,17 @@ class MyLogger(object):
     def error(self, msg):
         print(msg)
 
+def change_file(dic,ind,th):
+    dic[ind]=th
 
 def my_hook(d):
-    if '_percent_str' in d.keys():
-        status['dl_of_name'] = d['filename'][:-17]
-        status['percentage'] = d['_percent_str']
-    
+
     if d['status'] == 'finished':
         print('Done downloading, now converting ...')
         status['downloading'] = False
+    else:
+        change_file(status,'dl_of_name',d['filename'][:-16])
+        change_file(status,'percentage',str(round(d['downloaded_bytes']/d['total_bytes']*100,2))+'%')
 
 
 ydl_opts = {
@@ -39,7 +43,11 @@ ydl_opts = {
     'progress_hooks': [my_hook],
 }
 
+def update_status():
+    status['chchch'] = 10
+
 def load(url):
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+    if url.startswith('https://'):
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
 
