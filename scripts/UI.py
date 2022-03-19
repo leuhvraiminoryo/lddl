@@ -4,7 +4,6 @@ import scripts.download as dl
 sg.theme('DarkAmber')   # Add a touch of color
 # All the stuff inside your window.
 
-
 def run():
     layout = [  [sg.Text('Bonjour et bienvenue à notre application de téléchargement de vidéos youtube',key='first')],
             [sg.Text('téléchargement actuel :'),sg.Text('Aucun',key ='filename')],
@@ -15,13 +14,13 @@ def run():
     window = sg.Window('Downloader', layout,finalize=True)
 
     while True:
-        load_thread = threading.Thread(target=dl.update_status)
-        load_thread.start()
-        
+
+        event, values = window.read(1000)
+
         window['filename'].update(dl.status['dl_of_name'])
         window['progress'].update(dl.status['percentage'])
+        window.refresh()
 
-        event, values = window.read()
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             break
         if event == 'Ok':
