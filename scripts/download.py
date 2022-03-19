@@ -36,7 +36,7 @@ ydl_opts = {
     'format': 'best',
     'postprocessors': [{
         'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
+        'preferredcodec': 'mp4',
         'preferredquality': '192',
     }],
     'logger': MyLogger(),
