@@ -2,8 +2,8 @@ from __future__ import unicode_literals
 import youtube_dl
 
 global status 
+
 status = {
-    'chchch': 0,
     'downloading': False,
     'dl_of_name': None,
     'percentage': None
@@ -42,9 +42,6 @@ ydl_opts = {
     'logger': MyLogger(),
     'progress_hooks': [my_hook],
 }
-
-def update_status():
-    status['chchch'] = 10
 
 def load(url):
     if url.startswith('https://'):
