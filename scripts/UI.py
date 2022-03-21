@@ -9,6 +9,7 @@ def run():
             [sg.Text('téléchargement actuel :'),sg.Text('Aucun',key ='filename')],
             [sg.Text('progression du téléchargement :'),sg.Text('Aucun',key ='progress')],
             [sg.Text('Votre URL :'), sg.InputText()],
+            [sg.Text('Choisissez votre format de fichier :'), sg.OptionMenu(['mp4','mp3'],key='Format')],
             [sg.Button('Ok'), sg.Button('Cancel')] ]
 
     window = sg.Window('Downloader', layout,finalize=True)
@@ -16,10 +17,13 @@ def run():
     while True:
 
         event, values = window.read(1000)
-
+        
         window['filename'].update(dl.status['dl_of_name'])
         window['progress'].update(dl.status['percentage'])
         window.refresh()
+
+        if 'Format' == 'mp3':
+            dl.ydl_opts['format'] = 'bestaudio'
 
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             break
