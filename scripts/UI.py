@@ -1,9 +1,10 @@
 import threading, PySimpleGUI as sg
 import scripts.download as dl
+import os
 
 sg.theme('DarkAmber')   # Add a touch of color
 # All the stuff inside your window.
-
+audio_types = ['mp3']
 def run():
     layout = [  [sg.Text('Bonjour et bienvenue à notre application de téléchargement de vidéos youtube',key='first')],
             [sg.Text('téléchargement actuel :'),sg.Text('Aucun',key ='filename')],
@@ -15,16 +16,17 @@ def run():
     window = sg.Window('Downloader', layout,finalize=True)
 
     while True:
-
+        values = {'Format' : 'mp4'}
         event, values = window.read(1000)
         
         window['filename'].update(dl.status['dl_of_name'])
         window['progress'].update(dl.status['percentage'])
         window.refresh()
 
-        if 'Format' == 'mp3':
-            dl.ydl_opts['format'] = 'bestaudio'
-
+        dl.status['format'] = values['Format']
+        if values['Format'] in audio_types:
+            dl.status['audio_only'] = True
+        
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             break
         if event == 'Ok':

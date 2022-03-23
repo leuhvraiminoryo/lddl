@@ -1,12 +1,14 @@
 from __future__ import unicode_literals
-import youtube_dl
+import youtube_dl, os
 
 global status 
 
 status = {
     'downloading': False,
     'dl_of_name': None,
-    'percentage': None
+    'percentage': None,
+    'format' : '',
+    'audio_only' : False
 }
 
 class MyLogger(object):
@@ -27,6 +29,8 @@ def my_hook(d):
     if d['status'] == 'finished':
         print('Done downloading, now converting ...')
         status['downloading'] = False
+        if status['audio_only']:
+            os.rename(os.getcwd()+'\\'+d['filename'],d['filename'][:-16] + '.'+status['format'])
     else:
         change_file(status,'dl_of_name',d['filename'][:-16])
         change_file(status,'percentage',str(round(d['downloaded_bytes']/d['total_bytes']*100,2))+'%')
