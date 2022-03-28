@@ -2,18 +2,22 @@ import threading, PySimpleGUI as sg
 import scripts.download as dl
 import os
 
+ID_dl = 0
 sg.theme('DarkAmber')   # Add a touch of color
 # All the stuff inside your window.
 audio_types = ['mp3']
 def run():
     layout = [  [sg.Text('Bonjour et bienvenue à notre application de téléchargement de vidéos youtube',key='first')],
-            [sg.Text('téléchargement actuel :'),sg.Text('Aucun',key ='filename')],
-            [sg.Text('progression du téléchargement :'),sg.Text('Aucun',key ='progress')],
             [sg.Text('Votre URL :'), sg.InputText()],
             [sg.Text('Choisissez votre format de fichier :'), sg.OptionMenu(['mp4','mp3'],key='Format')],
             [sg.Button('Ok'), sg.Button('Cancel')] ]
+    layout2 = [ [sg.Text('téléchargement actuel :'),sg.Text('Aucun',key ='filename')],
+            [sg.Text('progression du téléchargement :'),sg.Text('Aucun',key ='progress')] ]
 
-    window = sg.Window('Downloader', layout,finalize=True)
+    tabgrp = [[sg.TabGroup([[sg.Tab('Sélection téléchargements', layout, border_width =10),
+                    sg.Tab('Téléchargement ' + str(ID_dl), layout2)]], tab_location='centertop', border_width=5)]]
+    
+    window = sg.Window('Downloader', tabgrp)
 
     while True:
         values = {'Format' : 'mp4'}
