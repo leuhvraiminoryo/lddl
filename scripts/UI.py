@@ -26,6 +26,10 @@ def run():
         dl.status['format'] = values['Format']
         if values['Format'] in audio_types:
             dl.status['audio_only'] = True
+            dl.ydl_opts['format'] = 'bestaudio/best'
+        else:
+            dl.status['audio_only'] = False
+            dl.ydl_opts['format'] = 'best'
         
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
             break
