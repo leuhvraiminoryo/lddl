@@ -24,9 +24,6 @@ class MyLogger(object):
     def error(self, msg):
         print(msg)
 
-def change_file(dic,ind,th):
-    dic[ind]=th
-
 def my_hook(d):
 
     if d['status'] == 'finished':
@@ -35,12 +32,12 @@ def my_hook(d):
         if status['audio_only']:
             os.rename(os.getcwd()+'\\'+d['filename'],d['filename'][:-16] + '.'+status['format'])
     else:
-        change_file(status,'dl_of_name',d['filename'][:-16])
-        change_file(status,'percentage',d['_percent_str'])
-        change_file(status,'speed',d['_speed_str'])
-        change_file(status,'eta',d['_eta_str'])
+        status['dl_of_name'] = d['filename'][:-16]
+        status['percentage'] = d['_percent_str']
+        status['speed'] = d['_speed_str']
+        status['eta'] = d['_eta_str']
 
-        change_file(status,'kilobytes',str(d['downloaded_bytes']%1000)+' / '+str(d['total_bytes']%1000))
+        #status['kilobytes'] = str(d['downloaded_bytes']%1000)+' / '+str(d['total_bytes']%1000))
 
 
 ydl_opts = {
