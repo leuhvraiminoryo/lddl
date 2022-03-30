@@ -1,6 +1,6 @@
 import threading, PySimpleGUI as sg
 import scripts.download as dl
-import os
+import sys
 
 sg.theme('DarkAmber')   # Add a touch of color
 # All the stuff inside your window.
@@ -32,8 +32,7 @@ def run():
 
         window.refresh()
 
-        if values['Format'] is not None:
-            dl.status['format'] = values['Format']
+        dl.status['format'] = values['Format']
 
         if values['Format'] in audio_types:
             dl.status['audio_only'] = True
@@ -43,12 +42,10 @@ def run():
             dl.ydl_opts['format'] = 'best'
         
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
-            break
+            window.close()
+            sys.exit('window closed')
 
         if event == 'Ok':
             dl.status['downloading'] = True
             load_thread = threading.Thread(target=dl.load,args=(values[0],))
             load_thread.start()
- 
-
-    window.close()
