@@ -8,7 +8,10 @@ status = {
     'dl_of_name': None,
     'percentage': None,
     'format' : '',
-    'audio_only' : False
+    'audio_only' : False,
+    'kilobytes' : None,
+    'speed' : None,
+    'eta' : None
 }
 
 class MyLogger(object):
@@ -33,7 +36,11 @@ def my_hook(d):
             os.rename(os.getcwd()+'\\'+d['filename'],d['filename'][:-16] + '.'+status['format'])
     else:
         change_file(status,'dl_of_name',d['filename'][:-16])
-        change_file(status,'percentage',str(round(d['downloaded_bytes']/d['total_bytes']*100,2))+'%')
+        change_file(status,'percentage',d['_percent_str'])
+        change_file(status,'speed',d['_speed_str'])
+        change_file(status,'eta',d['_eta_str'])
+
+        change_file(status,'kilobytes',str(d['downloaded_bytes']%1000)+' / '+str(d['total_bytes']%1000))
 
 
 ydl_opts = {
