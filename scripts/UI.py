@@ -32,7 +32,8 @@ def run():
 
         window.refresh()
 
-        dl.status['format'] = values['Format']
+        if values['Format'] is not None:
+            dl.status['format'] = values['Format']
 
         if values['Format'] in audio_types:
             dl.status['audio_only'] = True
