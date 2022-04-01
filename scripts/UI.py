@@ -1,10 +1,11 @@
 import threading, PySimpleGUI as sg
 import scripts.download as dl
-import sys
+import sys, time
 
-sg.theme('DarkAmber')   # Add a touch of color
-# All the stuff inside your window.
+sg.theme('DarkAmber')   
+
 audio_types = ['mp3']
+
 def run():
     layout = [  [sg.Text('Bonjour et bienvenue à notre application de téléchargement de vidéos youtube',key='first')],
             [sg.Text('Votre URL :'), sg.InputText()],
@@ -20,25 +21,30 @@ def run():
     
     window = sg.Window('Downloader', tabgrp)
 
+    selected = 'exemple'
+    st = time.time()
+
     while True:
+        if time.time() - st > 15:
+            selected = 'その着せ替え人形は恋'
         values = {'Format' : 'mp4'}
         event, values = window.read(1000)
         
-        window['filename'].update(dl.status['dl_of_name'])
-        window['progress'].update(dl.status['percentage'])
-        #window['kilobytes'].update(dl.status['kilobytes'])
-        window['speed'].update(dl.status['speed'])
-        window['eta'].update(dl.status['eta'])
+        window['filename'].update(dl.status[selected]['dl_of_name'])
+        window['progress'].update(dl.status[selected]['percentage'])
+        #window['kilobytes'].update(dl.status[selected]['kilobytes'])
+        window['speed'].update(dl.status[selected]['speed'])
+        window['eta'].update(dl.status[selected]['eta'])
 
         window.refresh()
 
         dl.status['format'] = values['Format']
 
         if values['Format'] in audio_types:
-            dl.status['audio_only'] = True
+            dl.audio_only = True
             dl.ydl_opts['format'] = 'bestaudio/best'
         else:
-            dl.status['audio_only'] = False
+            dl.audio_only = False
             dl.ydl_opts['format'] = 'best'
         
         if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
@@ -46,6 +52,5 @@ def run():
             sys.exit('window closed')
 
         if event == 'Ok':
-            dl.status['downloading'] = True
             load_thread = threading.Thread(target=dl.load,args=(values[0],))
             load_thread.start()
