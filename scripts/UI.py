@@ -11,7 +11,8 @@ def run():
             [sg.Text('Votre URL :'), sg.InputText()],
             [sg.Text('Choisissez votre format de fichier :'), sg.OptionMenu(['mp4','mp3'],key='Format')],
             [sg.Button('Ok'), sg.Button('Cancel')] ]
-    layout2 = [ [sg.Text('>> téléchargement actuel :'),sg.Text('Aucun',key ='filename')],
+    layout2 = [[ sg.Text('voir :'), sg.OptionMenu(['rien'],key='selected')], 
+            [sg.Text('>> téléchargement actuel :'),sg.Text('Aucun',key ='filename')],
             [sg.Text('>> pourcentage :'),sg.Text('Aucun',key ='progress')],#,sg.Text('kilobytes :'),sg.Text('Aucun',key='kilobytes')]
             [sg.Text('>> vitesse de dl :'),sg.Text('Aucun',key='speed')],
             [sg.Text('>> temps restant :'),sg.Text('Aucun',key='eta')]]
@@ -21,20 +22,23 @@ def run():
     
     window = sg.Window('Downloader', tabgrp)
 
-    selected = 'exemple'
-    st = time.time()
 
     while True:
-        if time.time() - st > 15:
-            selected = 'その着せ替え人形は恋'
+
         values = {'Format' : 'mp4'}
         event, values = window.read(1000)
+
+        if values['selected'] not in ('',None,'rien','exemple'):
+            selected = values['selected'].replace("'",'').replace('(','').replace(')','').replace(',','').split(' ')[0]
+            print(selected)
         
-        window['filename'].update(dl.status[selected]['dl_of_name'])
-        window['progress'].update(dl.status[selected]['percentage'])
-        #window['kilobytes'].update(dl.status[selected]['kilobytes'])
-        window['speed'].update(dl.status[selected]['speed'])
-        window['eta'].update(dl.status[selected]['eta'])
+            window['filename'].update(dl.status[selected]['dl_of_name'])
+            window['progress'].update(dl.status[selected]['percentage'])
+            #window['kilobytes'].update(dl.status[selected]['kilobytes'])
+            window['speed'].update(dl.status[selected]['speed'])
+            window['eta'].update(dl.status[selected]['eta'])
+
+        window['selected'].update([i for i in dl.status.keys()])
 
         window.refresh()
 
